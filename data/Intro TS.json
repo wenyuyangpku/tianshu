@@ -1,0 +1,354 @@
+{
+  "title": "TypeScript 简介",
+  "author": "杨文宇",
+  "content": [
+    {
+      "title": "为什么用Typescript?",
+      "section": [
+        {
+          "type": "ul",
+          "content": [
+            "使用类型，在编译前捕捉错误，增加开发的速度",
+            "使用未来的Javascript特性"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "类型概览",
+      "section": [
+        {
+          "type": "p",
+          "content": "原始类型"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "let num: number;\nlet str: string;\nlet bool: boolean;\n"
+        },
+        {
+          "type": "p",
+          "content": "数组"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "let boolArray: boolean[];"
+        },
+        {
+          "type": "p",
+          "content": "接口"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "interface Name {\n  first: string;\n  second?: string;\n  readonly third: string;\n}"
+        },
+        {
+          "type": "p",
+          "content": "内联类型注解"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "let name: {\n  first: string;\n  second: string;\n};\n\nname = {\n  first: 'John',\n  second: 'Doe'\n};"
+        },
+        {
+          "type": "p",
+          "content": "特殊类型：any, null, undefined, void"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "let num: number;\nlet str: string;\n\n// 这些类型能被赋予\nnum = null;\nstr = undefined;"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "function log(message: string): void {\n  console.log(message);\n}"
+        },
+        {
+          "type": "p",
+          "content": "泛型：在计算机科学中，许多算法和数据结构并不会依赖于对象的实际类型。但是，你仍然会想在每个变量里强制提供约束。"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "function reverse<T>(items: T[]): T[] {\n  const toreturn = [];\n  for (let i = items.length - 1; i >= 0; i--) {\n    toreturn.push(items[i]);\n  }\n  return toreturn;\n}\n\nconst sample = [1, 2, 3];\nlet reversed = reverse(sample);\n\nconsole.log(reversed); // 3, 2, 1\n\nreversed[0] = '1'; // Error: Type 'string' is not assignable to type 'number'.(2322)"
+        },
+        {
+          "type": "p",
+          "content": "联合类型"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "type u = string | number;"
+        },
+        {
+          "type": "p",
+          "content": "交叉类型"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "interface a {\n    x: string;\n}\n\ninterface b {\n    y: number;\n}\n\nlet c: a & b;\n\nc = { x: \"1\", y: 1 }\n"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "interface a {\n    x: string;\n}\n\ninterface b {\n    x: number;\n}\n\nlet c: a & b;\n\nc={x:?}\n"
+        },
+        {
+          "type": "hide",
+          "display": "",
+          "content": [
+            {
+              "section": [
+                {
+                  "type": "highlight",
+                  "language": "typescript",
+                  "children": "x:never"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "p",
+          "content": "元组类型"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "let nameNumber: [string, number];\n\n// Ok\nnameNumber = ['Jenny', 221345];\n\n// Error\nnameNumber = ['Jenny', '221345'];"
+        },
+        {
+          "type": "p",
+          "content": "类型别名"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "type Text = string | { text: string };\ntype Coordinates = [number, number];\ntype Callback = (data: string) => void;"
+        }
+      ]
+    },
+    {
+      "title": "Types vs interfaces",
+      "section": [
+        {
+          "type": "ul",
+          "content": [
+            "Interface用于描述数据形状，如object",
+            "Type用于描述数据类型，如primitive，union，intersection，tuple等"
+          ]
+        },
+        {
+          "type": "p",
+          "content": "声明融合：interface支持，type alias不支持。"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "interface Song {\n  artistName: string;\n};\n\ninterface Song {\n  songName: string;\n};\n\nconst song: Song = {\n  artistName: \"Freddie\",\n  songName: \"The Chain\"\n};"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "type Song = {\n  artistName: string;\n};\n\ntype Song {\n  songName: string;\n};\n\n// Duplicate identifier 'Song'.(2300)\n"
+        },
+        {
+          "type": "p",
+          "content": "Type alias支持属性的计算，称之为mapped type，interface不支持。"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "type Keys = \"firstname\" | \"surname\"\n\ntype DudeType = {\n  [key in Keys]: string\n}\n\nconst test: DudeType = {\n  firstname: \"Pawel\",\n  surname: \"Grzybek\"\n}\n"
+        },
+        {
+          "type": "p",
+          "content": "Interface支持 implements 和 extends"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "interface ClockInterface {\n  currentTime: Date;\n  setTime(d: Date): void;\n}\n\nclass Clock implements ClockInterface {\n  currentTime: Date = new Date();\n  setTime(d: Date) {\n    this.currentTime = d;\n  }\n  constructor(h: number, m: number) {}\n}\n"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "interface ClockConstructor {\n  new(hour: number, minute: number): void;\n}\n\nclass Clock implements ClockConstructor {\n  constructor(h: number, m: number) { }\n}\n"
+        },
+        {
+          "type": "hide",
+          "display": "none",
+          "content": [
+            {
+              "section": [
+                {
+                  "type": "highlight",
+                  "language": "typescript",
+                  "children": "Difference between the static and instance sides of classes \nclass 包含两种类型：静态类型及实例类型\nimplements interface只检测实例类型，构造函数属于静态类型"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "p",
+          "content": "结论："
+        },
+        {
+          "type": "ul",
+          "content": [
+            "Interface更适用于简单场景，如API等",
+            "Type在某些场景是不可或缺的，对任何类型提供了语义化对别名，适用于复杂场景",
+            "如果你需要使用类型注解的层次结构，请使用接口。它能使用 implements 和 extends"
+          ]
+        },
+        {
+          "type": "p",
+          "content": "哪位同学来分析一下interface和class的区别？"
+        },
+        {
+          "type": "hide",
+          "display": "none",
+          "content": [
+            {
+              "section": [
+                {
+                  "type": "ul",
+                  "content": [
+                    "Interface更加简单灵活，用于辅助 class (implements)",
+                    "Interface/type仅构成一份结构的合约，并不生成任何代码"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "类型保护",
+      "section": [
+        {
+          "type": "p",
+          "content": "typeof"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "function doSome(x: number | string) {\n  if (typeof x === 'string') {\n    console.log(x.substr(1)); // ok\n  }\n\n  x.substr(1); // Error: 无法保证 x 是 string 类型\n}"
+        },
+        {
+          "type": "p",
+          "content": "instanceof"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "class Foo {\n  foo = 123;\n  common = '123';\n}\n\nclass Bar {\n  bar = 123;\n  common = '123';\n}\n\nfunction doStuff(arg: Foo | Bar) {\n  if (arg instanceof Foo) {\n    console.log(arg.foo); // ok\n    console.log(arg.bar); // Error\n  }\n  if (arg instanceof Bar) {\n    console.log(arg.foo); // Error\n    console.log(arg.bar); // ok\n  }\n}"
+        },
+        {
+          "type": "p",
+          "content": "in"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "interface A {\n  x: number;\n}\n\ninterface B {\n  y: string;\n}\n\nfunction doStuff(q: A | B) {\n  if ('x' in q) {\n    // q: A\n  } else {\n    // q: B\n  }\n}"
+        },
+        {
+          "type": "p",
+          "content": "字面量类型保护"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "type Foo = {\n  kind: 'foo'; // 字面量类型\n  foo: number;\n};\n\ntype Bar = {\n  kind: 'bar'; // 字面量类型\n  bar: number;\n};\n\nfunction doStuff(arg: Foo | Bar) {\n  if (arg.kind === 'foo') {\n    console.log(arg.foo); // ok\n    console.log(arg.bar); // Error\n  } else {\n    // 一定是 Bar\n    console.log(arg.foo); // Error\n    console.log(arg.bar); // ok\n  }\n}\n"
+        },
+        {
+          "type": "p",
+          "content": "使用定义的类型保护"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "// 仅仅是一个 interface\ninterface Foo {\n  foo: number;\n  common: string;\n}\n\ninterface Bar {\n  bar: number;\n  common: string;\n}\n\n// 用户自己定义的类型保护！\nfunction isFoo(arg: Foo | Bar): arg is Foo {\n  return (arg as Foo).foo !== undefined;\n}\n\n// 用户自己定义的类型保护使用用例：\nfunction doStuff(arg: Foo | Bar) {\n  if (isFoo(arg)) {\n    console.log(arg.foo); // ok\n    console.log(arg.bar); // Error\n  } else {\n    console.log(arg.foo); // Error\n    console.log(arg.bar); // ok\n  }\n}\n"
+        }
+      ]
+    },
+    {
+      "title": "类型兼容性",
+      "section": [
+        {
+          "type": "p",
+          "content": "结构化：TypeScript 对象是一种结构类型，这意味着只要结构匹配，名称也就无关紧要了"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "interface Point {\n  x: number;\n  y: number;\n}\n\nclass Point2D {\n  constructor(public x: number, public y: number) {}\n}\n\nlet p: Point;\n\n// ok, 因为是结构化的类型\np = new Point2D(1, 2);\n"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "interface Point2D {\n  x: number;\n  y: number;\n}\n\ninterface Point3D {\n  x: number;\n  y: number;\n  z: number;\n}\n\nconst point2D: Point2D = { x: 0, y: 10 };\nconst point3D: Point3D = { x: 0, y: 10, z: 20 };\nfunction iTakePoint2D(point: Point2D) {\n  /* do something */\n}\n\niTakePoint2D(point2D); // ok, 完全匹配\niTakePoint2D(point3D); // 额外的信息，没关系\niTakePoint2D({ x: 0 }); // Error: 没有 'y'\n"
+        },
+        {
+          "type": "p",
+          "content": "协变（Covariant）：返回类型必须包含足够的数据。"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "interface Point2D {\n  x: number;\n  y: number;\n}\ninterface Point3D {\n  x: number;\n  y: number;\n  z: number;\n}\n\nlet iMakePoint2D = (): Point2D => ({ x: 0, y: 0 });\nlet iMakePoint3D = (): Point3D => ({ x: 0, y: 0, z: 0 });\n\niMakePoint2D = iMakePoint3D;\niMakePoint3D = iMakePoint2D; // ERROR: Point2D 不能赋值给 Point3D\n"
+        },
+        {
+          "type": "p",
+          "content": "双向协变：参数类型既可是协变的也可是逆变的。"
+        },
+        {
+          "type": "highlight",
+          "language": "typescript",
+          "children": "const iTakeSomethingAndPassItAnErr = (x: (err: Error, data: any) => void) => {\n  /* 做一些其他的 */\n};\n\niTakeSomethingAndPassItAnErr(() => null); // ok\niTakeSomethingAndPassItAnErr(err => null); // ok\niTakeSomethingAndPassItAnErr((err, data) => null); // ok\n\n// Error: 参数类型 ‘(err: any, data: any, more: any) => null’ 不能赋值给参数类型 ‘(err: Error, data: any) => void’\niTakeSomethingAndPassItAnErr((err, data, more) => null);\n"
+        },
+        {
+          "type": "p",
+          "content": "问题：假设我有如下三种类型：Greyhound ≼ Dog ≼ Animal，以下哪种类型是 Dog → Dog 的子类呢？"
+        },
+        {
+          "type": "ol",
+          "content": [
+            "Greyhound → Greyhound",
+            "Greyhound → Animal",
+            "Animal → Animal",
+            "Animal → Greyhound"
+          ]
+        },
+        {
+          "type": "hide",
+          "display": "none",
+          "content": [
+            {
+              "section": [
+                {
+                  "type": "ul",
+                  "content": [
+                    "首先我们假设 f 是一个以 Dog → Dog 为参数的函数,现在我想给函数 f 传入某个函数 g 来调用。我们来瞧瞧当 g 为以上四种类型时，会发生什么情况。",
+                    "我们假设 g : Greyhound → *, f(g) 的类型是否安全？不安全，因为在f内调用它的参数(g)函数时，使用的参数可能是一个不同于灰狗但又是狗的子类，例如 GermanShepherd （牧羊犬）。",
+                    "我们假设 g : * → Animal, f(g) 的类型是否安全？不安全。因为 f 有可能在调用完参数之后，让返回值，也就是 Animal （动物）狗叫。并非所有动物都会狗叫。",
+                    "如上所述，我们得出结论：(Animal → Greyhound) ≼ (Dog → Dog)"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
